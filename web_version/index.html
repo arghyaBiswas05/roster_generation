@@ -30,6 +30,8 @@
 					<input id="start_date" type="date" onchange="start_date_change()">
 					<input id="end_date" type="date">
 					<button class="btn btn-sm btn-success" style="margin-top: -5px;" onclick="add_range()">Add Range</button>
+					<button class="btn btn-sm btn-success" style="margin-top: -5px;" onclick="run()">Evalute</button>
+					<span id="loading" style="display: none;"><b>&nbsp;Loading...&nbsp;</b><img src="img.gif" height="35px;"></span>
 				</div>
 				<!-- <button class="btn btn-success" style="margin:auto;display:block;" onclick="add()">Press Me</button> -->
 
@@ -157,24 +159,17 @@
 		}
 
 		////////////////////////////////////////////////////////////////////////////////////////////
+		////////////////////////////////////////////////////////////////////////////////////////////
+		////////////////////////////////////////////////////////////////////////////////////////////
+		////////////////////////////////////////////////////////////////////////////////////////////
+		////////////////////////////////////////////////////////////////////////////////////////////
 
-		no_of_user = 9;
-		no_of_days = 7;
+		no_of_user = 5;
+		no_of_days = 10;
 
 		var duty = new Array();
 		for(let i = 0; i < no_of_days; i++)
 			duty[i] = [-1, -1, -1];
-
-		// let duty = [
-		// 	//Mo Ev Ni
-		// 	[-1, -1, -1], //Sun
-		// 	[-1, -1, -1], //Mon
-		// 	[-1, -1, -1], //Tue
-		// 	[-1, -1, -1], //Wed
-		// 	[-1, -1, -1], //Thu
-		// 	[-1, -1, -1], //Fri
-		// 	[-1, -1, -1], //Sat
-		// ];
 
 		var no_of_duty = new Array();
 		for(let i = 0; i < no_of_user; i++)
@@ -183,23 +178,26 @@
 		///////
 		function console_log(text)
 		{
-			let data = document.getElementById("log").innerHTML;
-			document.getElementById("log").innerHTML = data +"<br>"+ text;
+			// let data = document.getElementById("log").innerHTML;
+			// document.getElementById("log").innerHTML = data +"<br>"+ text;
 		}
 
 		function print_array()
 		{
-			console_log("");
+			let data = "";
 			for (let i = 0; i < duty.length; i++)
 			{
-				let data = "";
+
 				for(let j = 0; j < 3; j++)
 					data += String(duty[i][j]).padStart(2, '0')+",&nbsp;&nbsp;&nbsp;";
-				console_log(data);
-			}
-		}
 
+				data += "<br>";
+			}
+			// console_log(data);
+			document.getElementById("log").innerHTML = data;
+		}
 		//////
+
 
 		function get_per_head_duty()
 		{
@@ -209,10 +207,6 @@
 
 		function possable(y, x, user)
 		{ // row, col
-			// console_log(y, x, user);
-			// global duty
-
-
 			for(i=0; i < 3; i++)
 			{
 				if(duty[y][i] == user)
@@ -274,7 +268,6 @@
 
 		function evalute()
 		{
-			flag = 0;
 			for(let usr = 0; usr < no_of_user; usr++)
 			{
 				let counter = 0;
@@ -284,14 +277,10 @@
 					{
 						if(duty[day][shift] == usr)
 							counter += 1;
-						if(duty[day][shift] == 0)
-							flag = 1;
 					}
 				}
 				no_of_duty[usr] = counter;
-				// # print(usr, " => ", counter)
 			}
-			return flag;
 		}
 
 
@@ -325,6 +314,8 @@
 			}
 		}
 
+
+
 		function get_error()
 		{
 			for(let y = 0; y < no_of_days; y++)
@@ -345,10 +336,16 @@
 			return true;
 		}
 
-		while(!get_error())
-			calculate();
-		console_log(no_of_duty);
-		console_log(get_per_head_duty());
+
+		function run()
+		{
+			document.getElementById("loading").style.display="block";
+			while(!get_error())
+				calculate();
+			console_log(no_of_duty);
+			console_log(get_per_head_duty());
+			document.getElementById("loading").style.display="None";
+		}
 	</script>
 
 </body>
