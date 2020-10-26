@@ -158,19 +158,23 @@
 
 		////////////////////////////////////////////////////////////////////////////////////////////
 
-		no_of_user = 13;
+		no_of_user = 9;
 		no_of_days = 7;
 
-		let duty = [
-			//Mo Ev Ni
-			[-1, -1, -1], //Sun
-			[-1, -1, -1], //Mon
-			[-1, -1, -1], //Tue
-			[-1, -1, -1], //Wed
-			[-1, -1, -1], //Thu
-			[-1, -1, -1], //Fri
-			[-1, -1, -1], //Sat
-		];
+		var duty = new Array();
+		for(let i = 0; i < no_of_days; i++)
+			duty[i] = [-1, -1, -1];
+
+		// let duty = [
+		// 	//Mo Ev Ni
+		// 	[-1, -1, -1], //Sun
+		// 	[-1, -1, -1], //Mon
+		// 	[-1, -1, -1], //Tue
+		// 	[-1, -1, -1], //Wed
+		// 	[-1, -1, -1], //Thu
+		// 	[-1, -1, -1], //Fri
+		// 	[-1, -1, -1], //Sat
+		// ];
 
 		var no_of_duty = new Array();
 		for(let i = 0; i < no_of_user; i++)
@@ -219,7 +223,7 @@
 			}
 
 
-			if (no_of_duty[user -1] >= get_per_head_duty())
+			if (no_of_duty[user] >= get_per_head_duty())
 			{
 				console_log(y +" "+ x +" "+ user + " => false 	//More Duty");
 				return false;
@@ -271,21 +275,21 @@
 		function evalute()
 		{
 			flag = 0;
-			for(let temp = 1; temp < no_of_user+1; temp++)
+			for(let usr = 0; usr < no_of_user; usr++)
 			{
 				let counter = 0;
-				for(let y = 0; y < no_of_days; y++)
+				for(let day = 0; day < no_of_days; day++)
 				{
-					for(let x = 0; x < 3; x++)
+					for(let shift = 0; shift < 3; shift++)
 					{
-						if(duty[y][x] == temp)
+						if(duty[day][shift] == usr)
 							counter += 1;
-						if(duty[y][x] == 0)
+						if(duty[day][shift] == 0)
 							flag = 1;
 					}
 				}
-				no_of_duty[temp - 1] = counter;
-				// # print(temp, " => ", counter)
+				no_of_duty[usr] = counter;
+				// # print(usr, " => ", counter)
 			}
 			return flag;
 		}
@@ -306,26 +310,45 @@
 				{
 					if(duty[y][x] == -1)
 					{
-						for(let i = 0; i < no_of_user; i++)
+						random_usr = get_random_user();
+						if(possable(y,x,random_usr))
 						{
-							random_usr = get_random_user();
-							if(possable(y,x,random_usr))
-							{
-								duty[y][x] = random_usr;
-								console_log(">>>>> "+y+" "+x+" "+random_usr);
-								print_array();
-								console_log("##############################");
-								evalute();
-								calculate();
-							}
+							duty[y][x] = random_usr;
+							console_log(">>>>> "+y+" "+x+" "+random_usr);
+							print_array();
+							console_log("##############################");
+							evalute();
+							calculate();
 						}
-						return;
 					}
 				}
 			}
 		}
 
-		calculate();
+		function get_error()
+		{
+			for(let y = 0; y < no_of_days; y++)
+			{
+				for(let x = 0; x < 3; x++)
+				{
+					if(duty[y][x] == -1)
+					{
+						console.log("@@@@@@@@@@@@ ERROR!!!");
+						for(let i = 0; i < no_of_user; i++)
+							no_of_duty[i] = 0;
+						for(let i = 0; i < no_of_days; i++)
+							duty[i] = [-1, -1, -1];
+						return false;
+					}
+				}
+			}
+			return true;
+		}
+
+		while(!get_error())
+			calculate();
+		console_log(no_of_duty);
+		console_log(get_per_head_duty());
 	</script>
 
 </body>

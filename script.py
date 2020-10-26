@@ -142,6 +142,7 @@ def calculate():
 		for x in range(3):
 			if duty[y][x] == 0:
 				for i in range(no_of_user):
+					print(i)
 					random_usr = get_random_user()
 					if possable(y,x,random_usr):
 						duty[y][x] = random_usr
